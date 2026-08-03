@@ -1,3 +1,4 @@
+from ui.sidebar import create_sidebar
 from utils.file_manager import get_saved_images
 import gradio as gr
 from core.image_generator import generate_image
@@ -25,18 +26,7 @@ def create_dashboard():
         with gr.Row():
 
             # Left panel
-            with gr.Column(scale=1):
-
-                gr.Markdown("## 🧰 AI Tools")
-
-                gr.Button("🖼 Image Generator", interactive=False)
-                gr.Button("🎬 Video Generator", interactive=False)
-                gr.Button("🎵 Music Generator", interactive=False)
-                gr.Button("🎙 Voice Generator", interactive=False)
-
-                gallery_btn = gr.Button("📂 Gallery")
-
-                gr.Button("⚙ Settings", interactive=False)
+            create_sidebar()
 
             # Right panel
             with gr.Column(scale=3):
