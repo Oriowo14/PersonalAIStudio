@@ -1,18 +1,23 @@
-from utils.file_manager import get_saved_images
 import gradio as gr
+
 from core.image_generator import generate_image
+from utils.file_manager import get_saved_images
 
 
-def on_generate(prompt, style):
+def on_generate(prompt, style, aspect_ratio):
     if not prompt.strip():
         return None, "❌ Please enter a prompt.", []
 
-    full_prompt = f"{style}, {prompt}"
-    image = generate_image(full_prompt)
+    # Build the prompt
+    full_prompt = f"{style}, {aspect_ratio}, {prompt}"
 
+    # Generate image
+    image_path = generate_image(full_prompt)
+
+    # Reload gallery
     images = get_saved_images()
 
-    return image, "✅ Image generated successfully!", images
+    return image_path, "✅ Image generated successfully!", images
 
 
 def create_dashboard():
@@ -20,11 +25,13 @@ def create_dashboard():
     with gr.Blocks(title="Personal AI Studio") as app:
 
         gr.Markdown("# 🧠 Personal AI Studio")
-        gr.Markdown("### Create AI images with ease")
+        gr.Markdown("### Create AI Images with Ease")
 
         with gr.Row():
 
-            # Left panel
+            # =========================
+            # Left Sidebar
+            # =========================
             with gr.Column(scale=1):
 
                 gr.Markdown("## 🧰 AI Tools")
@@ -33,12 +40,12 @@ def create_dashboard():
                 gr.Button("🎬 Video Generator", interactive=False)
                 gr.Button("🎵 Music Generator", interactive=False)
                 gr.Button("🎙 Voice Generator", interactive=False)
-
-                gallery_btn = gr.Button("📂 Gallery")
-
+                gr.Button("📂 Gallery", interactive=False)
                 gr.Button("⚙ Settings", interactive=False)
 
-            # Right panel
+            # =========================
+            # Main Content
+            # =========================
             with gr.Column(scale=3):
 
                 prompt = gr.Textbox(
@@ -59,12 +66,24 @@ def create_dashboard():
                     label="Style"
                 )
 
+                aspect_ratio = gr.Dropdown(
+                    choices=[
+                        "Square (1:1)",
+                        "Portrait (2:3)",
+                        "Landscape (16:9)"
+                    ],
+                    value="Square (1:1)",
+                    label="Aspect Ratio"
+                )
+
                 generate_btn = gr.Button(
                     "🚀 Generate Image",
                     variant="primary"
                 )
 
-                image = gr.Image(label="Generated Image")
+                image = gr.Image(
+                    label="Generated Image"
+                )
 
                 status = gr.Markdown("🟢 Ready")
 
@@ -78,7 +97,7 @@ def create_dashboard():
 
                 generate_btn.click(
                     fn=on_generate,
-                    inputs=[prompt, style],
+                    inputs=[prompt, style, aspect_ratio],
                     outputs=[image, status, gallery]
                 )
 
