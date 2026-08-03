@@ -1,0 +1,85 @@
+from utils.file_manager import get_saved_images
+import gradio as gr
+from core.image_generator import generate_image
+
+
+def on_generate(prompt, style):
+    if not prompt.strip():
+        return None, "❌ Please enter a prompt.", []
+
+    full_prompt = f"{style}, {prompt}"
+    image = generate_image(full_prompt)
+
+    images = get_saved_images()
+
+    return image, "✅ Image generated successfully!", images
+
+
+def create_dashboard():
+
+    with gr.Blocks(title="Personal AI Studio") as app:
+
+        gr.Markdown("# 🧠 Personal AI Studio")
+        gr.Markdown("### Create AI images with ease")
+
+        with gr.Row():
+
+            # Left panel
+            with gr.Column(scale=1):
+
+                gr.Markdown("## 🧰 AI Tools")
+
+                gr.Button("🖼 Image Generator", interactive=False)
+                gr.Button("🎬 Video Generator", interactive=False)
+                gr.Button("🎵 Music Generator", interactive=False)
+                gr.Button("🎙 Voice Generator", interactive=False)
+
+                gallery_btn = gr.Button("📂 Gallery")
+
+                gr.Button("⚙ Settings", interactive=False)
+
+            # Right panel
+            with gr.Column(scale=3):
+
+                prompt = gr.Textbox(
+                    label="Describe your image",
+                    placeholder="Example: A futuristic African city at sunset..."
+                )
+
+                style = gr.Dropdown(
+                    choices=[
+                        "Realistic",
+                        "Fantasy",
+                        "Anime",
+                        "Cartoon",
+                        "Oil Painting",
+                        "Watercolour"
+                    ],
+                    value="Realistic",
+                    label="Style"
+                )
+
+                generate_btn = gr.Button(
+                    "🚀 Generate Image",
+                    variant="primary"
+                )
+
+                image = gr.Image(label="Generated Image")
+
+                status = gr.Markdown("🟢 Ready")
+
+                gr.Markdown("## 📂 Recent Images")
+
+                gallery = gr.Gallery(
+                    label="Generated Images",
+                    columns=3,
+                    height=300
+                )
+
+                generate_btn.click(
+                    fn=on_generate,
+                    inputs=[prompt, style],
+                    outputs=[image, status, gallery]
+                )
+
+    return app

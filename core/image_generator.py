@@ -1,13 +1,18 @@
 import os
 import requests
 from urllib.parse import quote
+from datetime import datetime
+
 
 def generate_image(prompt):
     os.makedirs("images", exist_ok=True)
 
-    filename = "images/generated.png"
+    # Create a unique filename using the current date and time
+    filename = datetime.now().strftime("image_%Y%m%d_%H%M%S.png")
+    filepath = os.path.join("images", filename)
 
     prompt = quote(prompt)
+
     url = f"https://image.pollinations.ai/prompt/{prompt}"
 
     response = requests.get(
@@ -25,10 +30,9 @@ def generate_image(prompt):
         raise Exception(f"Image generation failed: {response.status_code}")
 
     if not response.headers.get("Content-Type", "").startswith("image/"):
-        print(response.text[:500])
         raise Exception("The server did not return an image.")
 
-    with open(filename, "wb") as f:
+    with open(filepath, "wb") as f:
         f.write(response.content)
 
-    return filename
+    return filepath
