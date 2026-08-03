@@ -8,11 +8,11 @@ def on_generate(prompt, style):
         return None, "❌ Please enter a prompt.", []
 
     full_prompt = f"{style}, {prompt}"
-    image = generate_image(full_prompt)
+    image_path = generate_image(full_prompt)
 
     images = get_saved_images()
 
-    return image, "✅ Image generated successfully!", images
+    return image_path, "✅ Image generated successfully!", images, image_path
 
 
 def create_dashboard():
@@ -64,7 +64,13 @@ def create_dashboard():
                     variant="primary"
                 )
 
-                image = gr.Image(label="Generated Image")
+                image = gr.Image(
+    label="Generated Image",
+    type="filepath"
+)
+                download = gr.File(
+    label="📥 Download Image"
+)
 
                 status = gr.Markdown("🟢 Ready")
 
@@ -79,7 +85,7 @@ def create_dashboard():
                 generate_btn.click(
                     fn=on_generate,
                     inputs=[prompt, style],
-                    outputs=[image, status, gallery]
+                    outputs=[image, status, gallery, download]
                 )
 
     return app
