@@ -1,26 +1,21 @@
 import gradio as gr
 
 
-def create_video_page():
-
+def create_video_panel():
     with gr.Column():
+        gr.Markdown("# 🎬 Video Generator")
+        gr.Markdown(
+            """
+            ## 🚧 Coming Soon
 
-        gr.Markdown("## 🎬 AI Video Generator")
+            This workspace will allow you to:
 
-        image = gr.Image(
-            label="Image to Animate",
-            type="filepath"
-        )
+            ✅ Generate videos from AI images
 
-        generate_btn = gr.Button(
-            "🎬 Create Video",
-            variant="primary"
-        )
+            ✅ Preview MP4 videos
 
-        video = gr.Video(
-            label="Generated Video"
-        )
+            ✅ Download videos
 
-        status = gr.Markdown(
-            "🚧 Video generation coming soon..."
+            Stay tuned!
+            """
         )
