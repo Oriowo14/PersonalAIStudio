@@ -1,3 +1,4 @@
+from ui.gallery_panel import create_gallery_panel
 from ui.sidebar import create_sidebar
 from utils.file_manager import get_saved_images
 import gradio as gr
@@ -73,15 +74,7 @@ def create_dashboard():
 
                 status = gr.Markdown("🟢 Ready")
 
-                gr.Markdown("## 📂 Recent Images")
-
-                gallery = gr.Gallery(
-    label="Recent Images",
-    columns=4,
-    rows=1,
-    height=180,
-    object_fit="cover"
-)
+                gallery = create_gallery_panel()
 
                 generate_btn.click(
                     fn=on_generate,
