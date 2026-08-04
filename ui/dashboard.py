@@ -22,11 +22,19 @@ def create_dashboard():
 
         gr.Markdown("# 🧠 Personal AI Studio")
         gr.Markdown("### Create AI images with ease")
+        page_title = gr.Markdown("## 🖼 Image Generator")
 
         with gr.Row():
 
             # Left panel
-            create_sidebar()
+            (
+    image_btn,
+    video_btn,
+    music_btn,
+    voice_btn,
+    gallery_btn,
+    settings_btn,
+) = create_sidebar()
 
             # Right panel
             with gr.Column(scale=3):
@@ -56,7 +64,8 @@ def create_dashboard():
 
                 image = gr.Image(
     label="Generated Image",
-    type="filepath"
+    type="filepath",
+    height=450
 )
                 download = gr.File(
     label="📥 Download Image"
@@ -67,10 +76,12 @@ def create_dashboard():
                 gr.Markdown("## 📂 Recent Images")
 
                 gallery = gr.Gallery(
-                    label="Generated Images",
-                    columns=3,
-                    height=300
-                )
+    label="Recent Images",
+    columns=4,
+    rows=1,
+    height=180,
+    object_fit="cover"
+)
 
                 generate_btn.click(
                     fn=on_generate,
