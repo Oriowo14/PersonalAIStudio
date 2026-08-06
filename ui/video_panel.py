@@ -1,30 +1,26 @@
 import gradio as gr
 
+from core.video_generator import get_available_images
+
 
 def create_video_panel():
+
+    images = get_available_images()
 
     gr.Markdown("# 🎬 Video Studio")
 
     gr.Markdown(
         """
-Generate short AI videos from your generated images.
+Generate short AI videos from your AI-generated images.
 
-Version 2.0 will allow you to:
-
-• Select a generated image
-
-• Animate the image
-
-• Preview the video
-
-• Download the MP4
+Choose one of your generated images below.
 """
     )
 
     image_selector = gr.Dropdown(
-        choices=[],
-        label="Select an Image",
-        interactive=True
+        choices=images,
+        value=images[0] if images else None,
+        label="Select Generated Image"
     )
 
     generate_video_btn = gr.Button(
@@ -33,8 +29,8 @@ Version 2.0 will allow you to:
     )
 
     video = gr.Video(
-        label="Generated Video",
-        height=450
+        label="Video Preview",
+        height=400
     )
 
     status = gr.Markdown("🟢 Ready")

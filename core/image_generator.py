@@ -1,38 +1,18 @@
-import os
-import requests
-from urllib.parse import quote
-from datetime import datetime
+from config import load_config
+
+from providers.pollinations import generate as pollinations_generate
 
 
 def generate_image(prompt):
-    os.makedirs("images", exist_ok=True)
+    """
+    Generate an image using the configured provider.
+    """
 
-    # Create a unique filename using the current date and time
-    filename = datetime.now().strftime("image_%Y%m%d_%H%M%S.png")
-    filepath = os.path.join("images", filename)
+    config = load_config()
 
-    prompt = quote(prompt)
+    provider = config.get("image_provider", "pollinations")
 
-    url = f"https://image.pollinations.ai/prompt/{prompt}"
+    if provider == "pollinations":
+        return pollinations_generate(prompt)
 
-    response = requests.get(
-        url,
-        timeout=120,
-        headers={
-            "User-Agent": "Mozilla/5.0"
-        }
-    )
-
-    print("Status Code:", response.status_code)
-    print("Content-Type:", response.headers.get("Content-Type"))
-
-    if response.status_code != 200:
-        raise Exception(f"Image generation failed: {response.status_code}")
-
-    if not response.headers.get("Content-Type", "").startswith("image/"):
-        raise Exception("The server did not return an image.")
-
-    with open(filepath, "wb") as f:
-        f.write(response.content)
-
-    return filepath
+    raise ValueError(f"Unknown provider: {provider}")

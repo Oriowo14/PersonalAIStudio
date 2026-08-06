@@ -1,20 +1,21 @@
 import gradio as gr
 
 from core.image_generator import generate_image
+from core.video_generator import generate_video
+
 from utils.file_manager import get_saved_images
 
-from ui.sidebar import create_sidebar
-from ui.gallery_panel import create_gallery_panel
 from ui.image_generator_panel import create_image_generator_panel
+from ui.video_panel import create_video_panel
+from ui.gallery_panel import create_gallery_panel
+from ui.settings_panel import create_settings_panel
 
 
 def on_generate(prompt, style):
     if not prompt.strip():
         return None, "❌ Please enter a prompt.", [], None
 
-    full_prompt = f"{style}, {prompt}"
-
-    image_path = generate_image(full_prompt)
+    image_path = generate_image(f"{style}, {prompt}")
 
     images = get_saved_images()
 
@@ -31,21 +32,15 @@ def create_dashboard():
     with gr.Blocks(title="Personal AI Studio") as app:
 
         gr.Markdown("# 🧠 Personal AI Studio")
-        gr.Markdown("### Create AI images with ease")
-        gr.Markdown("## 🖼 Image Generator")
+        gr.Markdown("### Your Complete AI Content Creation Studio")
 
-        with gr.Row():
+        with gr.Tabs():
 
-            (
-                image_btn,
-                video_btn,
-                music_btn,
-                voice_btn,
-                gallery_btn,
-                settings_btn,
-            ) = create_sidebar()
+            # -------------------------------------------------
+            # IMAGE STUDIO
+            # -------------------------------------------------
 
-            with gr.Column(scale=3):
+            with gr.Tab("🖼 Image Studio"):
 
                 (
                     prompt,
@@ -58,11 +53,6 @@ def create_dashboard():
 
                 gallery = create_gallery_panel()
 
-                gallery_btn.click(
-                    fn=get_saved_images,
-                    outputs=gallery,
-                )
-
                 generate_btn.click(
                     fn=on_generate,
                     inputs=[prompt, style],
@@ -73,5 +63,50 @@ def create_dashboard():
                         download,
                     ],
                 )
+
+            # -------------------------------------------------
+            # VIDEO STUDIO
+            # -------------------------------------------------
+
+            with gr.Tab("🎬 Video Studio"):
+
+                (
+                    image_selector,
+                    generate_video_btn,
+                    video,
+                    video_status,
+                ) = create_video_panel()
+
+                generate_video_btn.click(
+                    fn=generate_video,
+                    inputs=image_selector,
+                    outputs=video,
+                )
+
+            # -------------------------------------------------
+            # MUSIC STUDIO
+            # -------------------------------------------------
+
+            with gr.Tab("🎵 Music Studio"):
+
+                gr.Markdown("# 🎵 Music Studio")
+                gr.Info("Coming in Version 2.2")
+
+            # -------------------------------------------------
+            # VOICE STUDIO
+            # -------------------------------------------------
+
+            with gr.Tab("🎙 Voice Studio"):
+
+                gr.Markdown("# 🎙 Voice Studio")
+                gr.Info("Coming in Version 2.3")
+
+            # -------------------------------------------------
+            # SETTINGS
+            # -------------------------------------------------
+
+            with gr.Tab("⚙️ Settings"):
+
+                create_settings_panel()
 
     return app
