@@ -19,7 +19,7 @@ def create_content_composer_panel():
         """
 Turn one idea into a coordinated content package.
 
-Personal AI Studio will use your idea to create:
+Personal AI Studio will use your creative direction to create:
 **Image → Video → Voice → Music**
 """
     )
@@ -41,6 +41,15 @@ but requires available Pollen balance.
 """
         )
 
+        video_duration_choices = [
+            6,
+            12,
+            18,
+            24,
+        ]
+
+        default_video_duration = 6
+
     else:
 
         gr.Markdown(
@@ -50,10 +59,19 @@ but requires available Pollen balance.
 Local Motion is currently selected.
 
 It creates free cinematic camera movement.
-For genuine body/object movement, use Pollinations
-AI Motion when Pollen is available.
+For genuine body/object movement, select Pollinations
+AI Motion in Settings when Pollen is available.
 """
         )
+
+        video_duration_choices = [
+            5,
+            10,
+            15,
+            20,
+        ]
+
+        default_video_duration = 5
 
     # -------------------------------------------------
     # CONTENT IDEA
@@ -66,6 +84,22 @@ AI Motion when Pollen is available.
             "building a successful technology company in Lagos."
         ),
         lines=6,
+    )
+
+    # -------------------------------------------------
+    # CONTENT TYPE
+    # -------------------------------------------------
+
+    content_type = gr.Dropdown(
+        choices=[
+            "Story",
+            "Advertisement",
+            "Social Media",
+            "Explainer",
+            "Cinematic",
+        ],
+        value="Story",
+        label="🎭 Content Type",
     )
 
     # -------------------------------------------------
@@ -86,6 +120,27 @@ AI Motion when Pollen is available.
     )
 
     # -------------------------------------------------
+    # VIDEO MOTION
+    # -------------------------------------------------
+
+    video_motion = gr.Dropdown(
+        choices=[
+            "Zoom In",
+            "Zoom Out",
+            "Pan Left",
+            "Pan Right",
+        ],
+        value="Zoom In",
+        label="🎬 Video Motion",
+    )
+
+    video_duration = gr.Dropdown(
+        choices=video_duration_choices,
+        value=default_video_duration,
+        label="🎬 Video Duration (seconds)",
+    )
+
+    # -------------------------------------------------
     # VOICE
     # -------------------------------------------------
 
@@ -98,6 +153,21 @@ AI Motion when Pollen is available.
         ],
         value="English Female",
         label="🎙 Narration Voice",
+    )
+
+    # -------------------------------------------------
+    # NARRATION TONE
+    # -------------------------------------------------
+
+    narration_tone = gr.Dropdown(
+        choices=[
+            "Professional",
+            "Inspirational",
+            "Dramatic",
+            "Friendly",
+        ],
+        value="Friendly",
+        label="📝 Narration Tone",
     )
 
     # -------------------------------------------------
@@ -199,10 +269,14 @@ AI Motion when Pollen is available.
 
     def run_composer(
         prompt_value,
+        content_type_value,
         style_value,
+        video_motion_value,
+        video_duration_value,
         voice_value,
+        narration_tone_value,
         music_style_value,
-        duration_value,
+        music_duration_value,
     ):
 
         if (
@@ -223,9 +297,13 @@ AI Motion when Pollen is available.
             package = create_content_package(
                 prompt=prompt_value,
                 style=style_value,
+                content_type=content_type_value,
                 voice=voice_value,
+                narration_tone=narration_tone_value,
                 music_style=music_style_value,
-                music_duration=duration_value,
+                music_duration=music_duration_value,
+                video_motion=video_motion_value,
+                video_duration=video_duration_value,
             )
 
             return (
@@ -254,8 +332,12 @@ AI Motion when Pollen is available.
         fn=run_composer,
         inputs=[
             prompt,
+            content_type,
             style,
+            video_motion,
+            video_duration,
             voice,
+            narration_tone,
             music_style,
             music_duration,
         ],
@@ -270,8 +352,12 @@ AI Motion when Pollen is available.
 
     return (
         prompt,
+        content_type,
         style,
+        video_motion,
+        video_duration,
         voice,
+        narration_tone,
         music_style,
         music_duration,
         generate_btn,
