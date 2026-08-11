@@ -1,7 +1,6 @@
 import gradio as gr
 
 from core.image_generator import generate_image
-from core.video_generator import generate_video
 from utils.file_manager import get_saved_images
 
 from ui.image_generator_panel import create_image_generator_panel
@@ -11,6 +10,7 @@ from ui.settings_panel import create_settings_panel
 from ui.prompt_assistant_panel import create_prompt_assistant_panel
 from ui.voice_panel import create_voice_panel
 from ui.music_panel import create_music_panel
+from ui.content_composer_panel import create_content_composer_panel
 
 
 def on_generate(prompt, style):
@@ -30,12 +30,24 @@ def on_generate(prompt, style):
 
 def create_dashboard():
 
-    with gr.Blocks(title="Personal AI Studio") as app:
+    with gr.Blocks(
+        title="Personal AI Studio"
+    ) as app:
 
         gr.Markdown("# 🧠 Personal AI Studio")
-        gr.Markdown("### Your Complete AI Content Creation Studio")
+        gr.Markdown(
+            "### Your Complete AI Content Creation Studio"
+        )
 
         with gr.Tabs():
+
+            # -------------------------------------------------
+            # CONTENT COMPOSER
+            # -------------------------------------------------
+
+            with gr.Tab("🚀 Content Composer"):
+
+                create_content_composer_panel()
 
             # -------------------------------------------------
             # IMAGE STUDIO
@@ -56,7 +68,10 @@ def create_dashboard():
 
                 generate_btn.click(
                     fn=on_generate,
-                    inputs=[prompt, style],
+                    inputs=[
+                        prompt,
+                        style,
+                    ],
                     outputs=[
                         image,
                         status,
@@ -73,16 +88,13 @@ def create_dashboard():
 
                 (
                     image_selector,
+                    motion_style,
+                    duration,
                     generate_video_btn,
                     video,
+                    video_download,
                     video_status,
                 ) = create_video_panel()
-
-                generate_video_btn.click(
-                    fn=generate_video,
-                    inputs=image_selector,
-                    outputs=video,
-                )
 
             # -------------------------------------------------
             # PROMPT ASSISTANT
