@@ -2,13 +2,13 @@ import gradio as gr
 
 from core.image_generator import generate_image
 from core.video_generator import generate_video
-
 from utils.file_manager import get_saved_images
 
 from ui.image_generator_panel import create_image_generator_panel
 from ui.video_panel import create_video_panel
 from ui.gallery_panel import create_gallery_panel
 from ui.settings_panel import create_settings_panel
+from ui.prompt_assistant_panel import create_prompt_assistant_panel
 
 
 def on_generate(prompt, style):
@@ -16,7 +16,6 @@ def on_generate(prompt, style):
         return None, "❌ Please enter a prompt.", [], None
 
     image_path = generate_image(f"{style}, {prompt}")
-
     images = get_saved_images()
 
     return (
@@ -84,13 +83,21 @@ def create_dashboard():
                 )
 
             # -------------------------------------------------
+            # PROMPT ASSISTANT
+            # -------------------------------------------------
+
+            with gr.Tab("✨ Prompt Assistant"):
+
+                create_prompt_assistant_panel()
+
+            # -------------------------------------------------
             # MUSIC STUDIO
             # -------------------------------------------------
 
             with gr.Tab("🎵 Music Studio"):
 
                 gr.Markdown("# 🎵 Music Studio")
-                gr.Info("Coming in Version 2.2")
+                gr.Info("Coming in Version 2.3")
 
             # -------------------------------------------------
             # VOICE STUDIO
@@ -99,7 +106,7 @@ def create_dashboard():
             with gr.Tab("🎙 Voice Studio"):
 
                 gr.Markdown("# 🎙 Voice Studio")
-                gr.Info("Coming in Version 2.3")
+                gr.Info("Coming in Version 2.4")
 
             # -------------------------------------------------
             # SETTINGS
