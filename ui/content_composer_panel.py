@@ -13,23 +13,31 @@ def create_content_composer_panel():
         "local",
     )
 
-    gr.Markdown("# 🎬 AI Content Composer")
+    gr.Markdown("# 🚀 AI Content Composer")
 
     gr.Markdown(
         """
-Turn one idea into a complete content package containing
-an image, video, voice narration, and background music.
+Turn one idea into a coordinated content package.
+
+Personal AI Studio will use your idea to create:
+**Image → Video → Voice → Music**
 """
     )
+
+    # -------------------------------------------------
+    # VIDEO PROVIDER STATUS
+    # -------------------------------------------------
 
     if video_provider == "pollinations":
 
         gr.Markdown(
             """
-🤖 **AI Motion Video Enabled**
+### 🤖 AI Motion Video
 
-The video will use Pollinations image-to-video.
-This requires available Pollen balance.
+Pollinations AI Motion is selected.
+
+It can create genuine movement in the subject,
+but requires available Pollen balance.
 """
         )
 
@@ -37,22 +45,32 @@ This requires available Pollen balance.
 
         gr.Markdown(
             """
-🆓 **Local Motion Video Enabled**
+### 🆓 Local Motion Video
 
-The video will use free cinematic camera movement.
-For genuine subject movement, select Pollinations AI Motion
-in Settings when you have available Pollen.
+Local Motion is currently selected.
+
+It creates free cinematic camera movement.
+For genuine body/object movement, use Pollinations
+AI Motion when Pollen is available.
 """
         )
 
+    # -------------------------------------------------
+    # CONTENT IDEA
+    # -------------------------------------------------
+
     prompt = gr.Textbox(
-        label="Content Idea",
+        label="💡 Content Idea",
         placeholder=(
-            "Example: A young entrepreneur building a successful "
-            "business in Lagos..."
+            "Example: A young African entrepreneur "
+            "building a successful technology company in Lagos."
         ),
-        lines=5,
+        lines=6,
     )
+
+    # -------------------------------------------------
+    # IMAGE STYLE
+    # -------------------------------------------------
 
     style = gr.Dropdown(
         choices=[
@@ -64,8 +82,12 @@ in Settings when you have available Pollen.
             "Watercolour",
         ],
         value="Realistic",
-        label="Image Style",
+        label="🖼 Image Style",
     )
+
+    # -------------------------------------------------
+    # VOICE
+    # -------------------------------------------------
 
     voice = gr.Dropdown(
         choices=[
@@ -75,8 +97,12 @@ in Settings when you have available Pollen.
             "British Male",
         ],
         value="English Female",
-        label="Narration Voice",
+        label="🎙 Narration Voice",
     )
+
+    # -------------------------------------------------
+    # MUSIC
+    # -------------------------------------------------
 
     music_style = gr.Dropdown(
         choices=[
@@ -86,7 +112,7 @@ in Settings when you have available Pollen.
             "Ambient",
         ],
         value="Cinematic",
-        label="Music Style",
+        label="🎵 Music Style",
     )
 
     music_duration = gr.Dropdown(
@@ -98,44 +124,78 @@ in Settings when you have available Pollen.
             30,
         ],
         value=10,
-        label="Music Duration (seconds)",
+        label="🎵 Music Duration (seconds)",
     )
+
+    # -------------------------------------------------
+    # GENERATE
+    # -------------------------------------------------
 
     generate_btn = gr.Button(
         "🚀 Create Complete Content",
         variant="primary",
     )
 
-    status = gr.Markdown("🟢 Ready")
+    status = gr.Markdown(
+        "🟢 Ready"
+    )
 
-    gr.Markdown("## 🖼 Generated Image")
+    # -------------------------------------------------
+    # IMAGE OUTPUT
+    # -------------------------------------------------
+
+    gr.Markdown(
+        "## 🖼 Generated Image"
+    )
 
     image = gr.Image(
-        label="Image",
+        label="Generated Image",
         type="filepath",
         height=350,
     )
 
-    gr.Markdown("## 🎬 Generated Video")
+    # -------------------------------------------------
+    # VIDEO OUTPUT
+    # -------------------------------------------------
+
+    gr.Markdown(
+        "## 🎬 Generated Video"
+    )
 
     video = gr.Video(
-        label="Video",
+        label="Generated Video",
         height=350,
     )
 
-    gr.Markdown("## 🎙 Generated Voice")
+    # -------------------------------------------------
+    # VOICE OUTPUT
+    # -------------------------------------------------
+
+    gr.Markdown(
+        "## 🎙 Generated Voice"
+    )
 
     voice_audio = gr.Audio(
-        label="Voice",
+        label="Voice Narration",
         type="filepath",
     )
 
-    gr.Markdown("## 🎵 Generated Music")
+    # -------------------------------------------------
+    # MUSIC OUTPUT
+    # -------------------------------------------------
+
+    gr.Markdown(
+        "## 🎵 Generated Music"
+    )
 
     music_audio = gr.Audio(
-        label="Music",
+        label="Background Music",
         type="filepath",
     )
+
+    # -------------------------------------------------
+    # GENERATION FUNCTION
+    # -------------------------------------------------
 
     def run_composer(
         prompt_value,
@@ -145,7 +205,10 @@ in Settings when you have available Pollen.
         duration_value,
     ):
 
-        if not prompt_value or not prompt_value.strip():
+        if (
+            not prompt_value
+            or not prompt_value.strip()
+        ):
 
             return (
                 None,
@@ -170,7 +233,7 @@ in Settings when you have available Pollen.
                 package["video"],
                 package["voice"],
                 package["music"],
-                "✅ Complete content package generated!",
+                "✅ Complete content package generated successfully!",
             )
 
         except Exception as error:
@@ -182,6 +245,10 @@ in Settings when you have available Pollen.
                 None,
                 f"❌ {error}",
             )
+
+    # -------------------------------------------------
+    # BUTTON EVENT
+    # -------------------------------------------------
 
     generate_btn.click(
         fn=run_composer,
