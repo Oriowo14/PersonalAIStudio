@@ -2,7 +2,6 @@ import gradio as gr
 
 from core.image_generator import generate_image
 from core.video_generator import generate_video
-
 from utils.file_manager import get_saved_images
 
 from ui.image_generator_panel import create_image_generator_panel
@@ -11,6 +10,7 @@ from ui.gallery_panel import create_gallery_panel
 from ui.settings_panel import create_settings_panel
 from ui.prompt_assistant_panel import create_prompt_assistant_panel
 from ui.voice_panel import create_voice_panel
+from ui.music_panel import create_music_panel
 
 
 def on_generate(prompt, style):
@@ -106,8 +106,7 @@ def create_dashboard():
 
             with gr.Tab("🎵 Music Studio"):
 
-                gr.Markdown("# 🎵 Music Studio")
-                gr.Info("Coming in Version 2.4")
+                create_music_panel()
 
             # -------------------------------------------------
             # SETTINGS
