@@ -13,14 +13,16 @@ def create_content_composer_panel():
         "local",
     )
 
-    gr.Markdown("# 🚀 AI Content Composer")
+    gr.Markdown(
+        "# 🚀 AI Content Composer"
+    )
 
     gr.Markdown(
         """
-Turn one idea into a coordinated content package.
+Turn one idea into a coordinated content package using
+a local AI production planner.
 
-Personal AI Studio will use your creative direction to create:
-**Image → Video → Voice → Music**
+**Idea → AI Plan → Image → Video → Voice → Music**
 """
     )
 
@@ -60,7 +62,7 @@ Local Motion is currently selected.
 
 It creates free cinematic camera movement.
 For genuine body/object movement, select Pollinations
-AI Motion in Settings when Pollen is available.
+AI Motion when Pollen is available.
 """
         )
 
@@ -198,7 +200,7 @@ AI Motion in Settings when Pollen is available.
     )
 
     # -------------------------------------------------
-    # GENERATE
+    # GENERATE BUTTON
     # -------------------------------------------------
 
     generate_btn = gr.Button(
@@ -208,6 +210,55 @@ AI Motion in Settings when Pollen is available.
 
     status = gr.Markdown(
         "🟢 Ready"
+    )
+
+    # -------------------------------------------------
+    # AI PRODUCTION PLAN
+    # -------------------------------------------------
+
+    gr.Markdown(
+        "## 🧠 AI Production Plan"
+    )
+
+    plan_title = gr.Textbox(
+        label="Title",
+        interactive=False,
+    )
+
+    story_concept = gr.Textbox(
+        label="Story Concept",
+        lines=3,
+        interactive=False,
+    )
+
+    main_subject = gr.Textbox(
+        label="Main Subject",
+        lines=2,
+        interactive=False,
+    )
+
+    setting = gr.Textbox(
+        label="Setting",
+        lines=2,
+        interactive=False,
+    )
+
+    visual_direction = gr.Textbox(
+        label="Visual Direction",
+        lines=4,
+        interactive=False,
+    )
+
+    video_direction = gr.Textbox(
+        label="AI Video Direction",
+        lines=4,
+        interactive=False,
+    )
+
+    music_direction = gr.Textbox(
+        label="AI Music Direction",
+        lines=4,
+        interactive=False,
     )
 
     # -------------------------------------------------
@@ -285,6 +336,13 @@ AI Motion in Settings when Pollen is available.
         ):
 
             return (
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
                 None,
                 None,
                 None,
@@ -306,17 +364,33 @@ AI Motion in Settings when Pollen is available.
                 video_duration=video_duration_value,
             )
 
+            plan = package["plan"]
+
             return (
+                plan["title"],
+                plan["story_concept"],
+                plan["main_subject"],
+                plan["setting"],
+                plan["visual_direction"],
+                plan["video_direction"],
+                plan["music_direction"],
                 package["image"],
                 package["video"],
                 package["voice"],
                 package["music"],
-                "✅ Complete content package generated successfully!",
+                "✅ AI production plan and complete content package generated successfully!",
             )
 
         except Exception as error:
 
             return (
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
                 None,
                 None,
                 None,
@@ -342,6 +416,13 @@ AI Motion in Settings when Pollen is available.
             music_duration,
         ],
         outputs=[
+            plan_title,
+            story_concept,
+            main_subject,
+            setting,
+            visual_direction,
+            video_direction,
+            music_direction,
             image,
             video,
             voice_audio,
@@ -361,6 +442,13 @@ AI Motion in Settings when Pollen is available.
         music_style,
         music_duration,
         generate_btn,
+        plan_title,
+        story_concept,
+        main_subject,
+        setting,
+        visual_direction,
+        video_direction,
+        music_direction,
         image,
         video,
         voice_audio,
